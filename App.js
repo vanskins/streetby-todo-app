@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity, Dimensions, Alert, Image} from 'react-native';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const PAGE = Dimensions.get('window')
@@ -41,8 +42,8 @@ export default class App extends React.Component {
         onPress={() => {
           const label = item.done ? 'UNDONE': 'DONE';
           Alert.alert(
-            'Alert Title',
-            'My Alert Msg',
+            'Streetby Todo',
+            item.todo,
             [
               {
                 text: label, onPress: () => {
@@ -124,7 +125,9 @@ export default class App extends React.Component {
           >
             <Text style={[styles.text]}>Submit Todo</Text>
           </TouchableOpacity>
+          <ScrollView>
           {this.todoList()}
+          </ScrollView>
         </View>
         <Footer />
       </View>
