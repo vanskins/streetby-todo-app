@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 
@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ecf0f1',
   },
   button: {
-    width: PAGE.width - 100,
+    width: PAGE.width,
     backgroundColor: '#2980b9',
     alignSelf: 'center',
     justifyContent: 'center'
@@ -27,6 +27,7 @@ export default class App extends React.Component {
   constructor(){
     super();
     this.state = {
+      text: '',
       todos: [
         {
           todo: 'Wash dishes',
@@ -38,13 +39,40 @@ export default class App extends React.Component {
         },
         {
           todo: 'Study Programming',
-          done: false,
+          done: true,
         },
       ],
     }
   }
+
+  _renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={{ height: 40, justifyContent: 'center', borderWidth: 1, marginTop: 15, backgroundColor: item.done ? 'green' : 'white', color: item.done ? 'white' : 'black' }}
+        onPress={() => {
+          Alert.alert(
+            'Todo',
+            item.todo,
+            [
+              { text: 'DONE', onPress: () => console.log('Ask me later pressed') },
+              { text: 'DELETE', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+            ],
+            { cancelable: false }
+          )
+        }}
+      >
+        <Text style={{ alignSelf: 'center' }}>{item.todo}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  _add = () => {
+    const { text, todos } = this.state;
+    todos.push({todo: text, done: false });
+  }
+
   render() {
-    const { todo } = this.state;
+    const { todos } = this.state;
     return (
       <View style={{ flex: 1 }}>
         <Header />
@@ -57,12 +85,13 @@ export default class App extends React.Component {
           />
           <TouchableOpacity
             style={[styles.button]}
+            onPress={this._add()}
           >
             <Text style={[styles.text]}>Submit Todo</Text>
           </TouchableOpacity>
           <FlatList
-            data={todo}
-            renderItem={({ item }) => <Text>{item.key}</Text>}
+            data={todos}
+            renderItem={this._renderItem}
           />
         </View>
         <Footer />
